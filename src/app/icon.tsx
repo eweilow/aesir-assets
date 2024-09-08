@@ -6,7 +6,7 @@ export const size = {
 };
 export const contentType = "image/png";
 
-import IconSvg from "@/app/assets/aesir_square.svg";
+import IconSvg from "@/assets/aesir_square.svg";
 
 export default function AppIcon() {
   return new ImageResponse(
