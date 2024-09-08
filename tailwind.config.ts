@@ -9,8 +9,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        aesir: {
+          dark: "#12092a", // "hsl(256.36deg 65% 10%)",
+          medium: "#180845", // "hsl(256.36deg 80% 15%)",
+          DEFAULT: "#37109F",
+        },
       },
     },
   },
