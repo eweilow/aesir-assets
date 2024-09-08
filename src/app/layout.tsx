@@ -51,7 +51,9 @@ export default function RootLayout({
             </Link>{" "}
             for ÆSIR - Association of Engineering Students in Rocketry 🚀
           </p>
-          <p>Last deployed {format(now, "yyyy-MM-dd")}</p>
+          <p className="italic text-white/50">
+            Last deployed {format(now, "yyyy-MM-dd")}
+          </p>
         </footer>
       </body>
     </html>
