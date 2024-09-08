@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Source_Sans_3 } from "next/font/google";
 
 import "./globals.css";
@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   title: "ÆSIR Assets",
   description:
     "Assets and graphical design for ÆSIR - Association of Engineering Students in Rocketry",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#37109F",
 };
 
 const now = new Date();
