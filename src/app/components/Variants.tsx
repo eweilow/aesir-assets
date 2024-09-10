@@ -17,7 +17,7 @@ function getPath(
   width?: number,
   ext = ".svg"
 ) {
-  let fullName = getFullName(variant, transparent, width);
+  const fullName = getFullName(variant, transparent, width);
   const publicPath = join("/generated", variant.name, fullName + ext);
   const filename = join("@/../public/", publicPath);
   assert(existsSync(filename), `File not found: ${filename}`);
