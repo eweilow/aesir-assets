@@ -62,9 +62,10 @@ class Asset {
           },
         },
       ],
+      floatPrecision: 4,
     });
     const optimizedText = optimized.data;
-    const prettierText = await prettier.format(convertedText, {
+    const prettierText = await prettier.format(optimizedText, {
       filepath: "file.html", // Format using HTML
     });
 
