@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${source_sans.className} h-full`}>
-      <body className="bg-aesir-dark flex flex-col h-full gap-4">
+      <body className="bg-aesir flex flex-col h-full">
         <nav className="bg-aesir p-4 flex flex-row items-center flex-wrap gap-4">
           <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 items-center">
             <Logo />
@@ -47,7 +47,9 @@ export default function RootLayout({
             </Link>
           </aside>
         </nav>
-        <section className="flex-1 p-4">{children}</section>
+
+        <section className="bg-aesir-dark py-4 flex-1 p-4">{children}</section>
+
         <footer className="bg-aesir-medium px-4 py-8 flex flex-col gap-8">
           <p className="text-center">
             Developed by{" "}
