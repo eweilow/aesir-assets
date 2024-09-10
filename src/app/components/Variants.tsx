@@ -1,10 +1,8 @@
 import {
-  Colors,
   ManifestType,
   VariantType,
   getFullName,
   hexFromColor,
-  nameFromColor,
 } from "@/generate/types";
 import assert from "assert";
 import { existsSync } from "fs";
@@ -12,10 +10,6 @@ import { readFile } from "fs/promises";
 import Image from "next/image";
 import Link from "next/link";
 import { join } from "path";
-
-function checkExists(publicPath: string) {
-  const filename = join("@/../public/", publicPath);
-}
 
 function getPath(
   variant: VariantType,
