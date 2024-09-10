@@ -1,13 +1,16 @@
 import sharp from "sharp";
 import React from "react";
 import { existsSync } from "fs";
-import { mkdir, readFile, rm, rmdir, writeFile } from "fs/promises";
+import { copyFile, mkdir, readFile, rm, rmdir, writeFile } from "fs/promises";
 import { basename, extname, join } from "path";
 import satori from "satori";
+import prettier from "prettier";
 
 const assetsDir = join(__dirname, "../assets");
 const outputDir = join(__dirname, "../public/generated");
 const tmpDir = join(assetsDir, ".tmp");
+
+import svgo from "svgo";
 
 class Asset {
   static async load(name: string) {
@@ -18,20 +21,27 @@ class Asset {
     }
 
     const text = await readFile(name, "utf-8");
-    return new Asset(name, text);
+    return new Asset(name, basename(name, extname(name)), text);
   }
 
-  constructor(public readonly name: string, public readonly text: string) {}
+  constructor(
+    public readonly filename: string,
+    public readonly name: string,
+    public readonly text: string
+  ) {}
 
-  static getSvgName(assetName: string, color: string) {
-    const name = basename(assetName, ".svg");
+  static getTmpName(name: string, color: string, ext = ".svg") {
     const variant = btoa(color);
 
     return `${name}_${variant}.svg`;
   }
 
-  static getPngName(name: string, width: number) {
-    return `${name}_${width}w.png`;
+  static getOutputName(name: string, width?: number, ext = ".png") {
+    if (width == null) {
+      return `${name}${ext}`;
+    }
+
+    return `${name}_${width}w${ext}`;
   }
 
   /**
@@ -39,16 +49,33 @@ class Asset {
    */
   async generateSvg(color: string) {
     const convertedText = this.text.replace(/"#ff0000"/gi, `"${color}"`);
-    const outputName = join(tmpDir, Asset.getSvgName(this.name, color));
+    const outputName = join(tmpDir, Asset.getTmpName(this.name, color));
 
-    await writeFile(outputName, convertedText);
+    const optimized = svgo.optimize(convertedText, {
+      plugins: [
+        {
+          name: "preset-default",
+          params: {
+            overrides: {
+              removeViewBox: false,
+            },
+          },
+        },
+      ],
+    });
+    const optimizedText = optimized.data;
+    const prettierText = await prettier.format(convertedText, {
+      filepath: "file.html", // Format using HTML
+    });
+
+    await writeFile(outputName, prettierText);
     return outputName;
   }
 
   /**
    * Generate PNGs for the given asset with the given colors and widths.
    */
-  async generatePng(
+  async generate(
     name: string,
     foreground: string,
     background: string,
@@ -58,11 +85,12 @@ class Asset {
     }
   ) {
     console.info(
-      `Generating PNG: ${this.name} -> ${foreground} on ${background}`
+      `Generating PNG: ${this.filename} -> ${foreground} on ${background}`
     );
-    const svgName = await this.generateSvg(foreground);
 
-    const { width, height } = await sharp(svgName).metadata();
+    const svgName = await this.generateSvg(foreground);
+    const svgSharp = sharp(svgName);
+    const { width, height } = await svgSharp.metadata();
     if (width == null || height == null) {
       throw new Error(`Failed to get dimensions for ${svgName}`);
     }
@@ -70,6 +98,11 @@ class Asset {
 
     const svgText = await readFile(svgName, "base64");
     const svgUri = `data:image/svg+xml;base64,${svgText}`;
+    const svgOutputName = join(
+      outputDir,
+      Asset.getOutputName(name, undefined, ".svg")
+    );
+    await copyFile(svgName, svgOutputName);
 
     for (const width of widths) {
       const padding = width * (options?.padding ?? 0);
@@ -102,7 +135,7 @@ class Asset {
         }
       );
 
-      const outputName = join(outputDir, Asset.getPngName(name, width));
+      const outputName = join(outputDir, Asset.getOutputName(name, width));
 
       let chain = sharp(Buffer.from(rendered));
       if (background !== Colors.Transparent) {
@@ -145,7 +178,7 @@ async function main() {
   const logoName = "aesir_logo";
   const squareName = "aesir_avatar";
 
-  await square.generatePng(
+  await square.generate(
     `${squareName}__color_on_white`,
     Colors.Color,
     Colors.White,
@@ -153,7 +186,7 @@ async function main() {
     { padding: 0.15 }
   );
 
-  await square.generatePng(
+  await square.generate(
     `${squareName}__white_on_color`,
     Colors.White,
     Colors.Color,
@@ -161,7 +194,7 @@ async function main() {
     { padding: 0.15 }
   );
 
-  await logo.generatePng(
+  await logo.generate(
     `${logoName}__color_on_white`,
     Colors.Color,
     Colors.White,
@@ -169,7 +202,7 @@ async function main() {
     { padding: 0.1 }
   );
 
-  await logo.generatePng(
+  await logo.generate(
     `${logoName}__white_on_color`,
     Colors.White,
     Colors.Color,
@@ -177,7 +210,7 @@ async function main() {
     { padding: 0.1 }
   );
 
-  await logo.generatePng(
+  await logo.generate(
     `${logoName}__gray_on_white`,
     Colors.Gray,
     Colors.White,
@@ -185,7 +218,7 @@ async function main() {
     { padding: 0.1 }
   );
 
-  await logo.generatePng(
+  await logo.generate(
     `${logoName}__black_on_white`,
     Colors.Black,
     Colors.White,
@@ -193,7 +226,7 @@ async function main() {
     { padding: 0.1 }
   );
 
-  await logo.generatePng(
+  await logo.generate(
     `${logoName}__color_on_transparent`,
     Colors.Color,
     Colors.Transparent,
@@ -201,7 +234,7 @@ async function main() {
     { padding: 0.1 }
   );
 
-  await logo.generatePng(
+  await logo.generate(
     `${logoName}__white_on_transparent`,
     Colors.White,
     Colors.Transparent,
@@ -209,7 +242,7 @@ async function main() {
     { padding: 0.1 }
   );
 
-  await logo.generatePng(
+  await logo.generate(
     `${logoName}__gray_on_transparent`,
     Colors.Gray,
     Colors.Transparent,
@@ -217,7 +250,7 @@ async function main() {
     { padding: 0.1 }
   );
 
-  await logo.generatePng(
+  await logo.generate(
     `${logoName}__black_on_transparent`,
     Colors.Black,
     Colors.Transparent,
