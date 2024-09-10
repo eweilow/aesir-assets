@@ -3,66 +3,66 @@
   "svg": "aesir_logo__black.svg",
   "foreground": 2,
   "background": 1,
-  "aspectRatio": 0.4,
+  "aspectRatio": 0.39285714285714285,
   "widths": [
     {
       "name": "aesir_logo__black_on_white_125w.png",
       "width": 125,
-      "height": 65,
+      "height": 64,
       "transparent": false
     },
     {
       "name": "aesir_logo__black_on_white_250w.png",
       "width": 250,
-      "height": 130,
+      "height": 129,
       "transparent": false
     },
     {
       "name": "aesir_logo__black_on_white_500w.png",
       "width": 500,
-      "height": 260,
+      "height": 257,
       "transparent": false
     },
     {
       "name": "aesir_logo__black_on_white_1000w.png",
       "width": 1000,
-      "height": 520,
+      "height": 514,
       "transparent": false
     },
     {
       "name": "aesir_logo__black_on_white_2000w.png",
       "width": 2000,
-      "height": 1040,
+      "height": 1029,
       "transparent": false
     },
     {
       "name": "aesir_logo__black_125w.png",
       "width": 125,
-      "height": 65,
+      "height": 64,
       "transparent": true
     },
     {
       "name": "aesir_logo__black_250w.png",
       "width": 250,
-      "height": 130,
+      "height": 129,
       "transparent": true
     },
     {
       "name": "aesir_logo__black_500w.png",
       "width": 500,
-      "height": 260,
+      "height": 257,
       "transparent": true
     },
     {
       "name": "aesir_logo__black_1000w.png",
       "width": 1000,
-      "height": 520,
+      "height": 514,
       "transparent": true
     },
     {
       "name": "aesir_logo__black_2000w.png",
       "width": 2000,
-      "height": 1040,
+      "height": 1029,
       "transparent": true
     }
   ]
