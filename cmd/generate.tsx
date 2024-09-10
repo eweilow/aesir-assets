@@ -2,7 +2,7 @@ import sharp from "sharp";
 import React from "react";
 import { existsSync } from "fs";
 import { copyFile, mkdir, readFile, rm, rmdir, writeFile } from "fs/promises";
-import { basename, extname, join } from "path";
+import { basename, dirname, extname, join } from "path";
 import satori from "satori";
 import prettier from "prettier";
 
@@ -11,6 +11,14 @@ const outputDir = join(__dirname, "../public/generated");
 const tmpDir = join(assetsDir, ".tmp");
 
 import svgo from "svgo";
+
+import {
+  Colors,
+  ManifestType,
+  getFullName,
+  hexFromColor,
+  nameFromColor,
+} from "@/generate/types";
 
 class Asset {
   static async load(name: string) {
@@ -32,25 +40,39 @@ class Asset {
 
   static getTmpName(name: string, color: string, ext = ".svg") {
     const variant = btoa(color);
-
     return `${name}_${variant}.svg`;
   }
 
-  static getOutputName(name: string, width?: number, ext = ".png") {
-    if (width == null) {
-      return `${name}${ext}`;
-    }
-
-    return `${name}_${width}w${ext}`;
+  static getOutputName(
+    name: string,
+    foreground: Colors,
+    background: Colors,
+    transparent: boolean,
+    width?: number,
+    ext = ".png"
+  ) {
+    const fullName = getFullName(
+      { name, foreground, background },
+      transparent,
+      width
+    );
+    return `${name}/${fullName}${ext}`;
   }
 
   /**
    * Generate an SVG file with the given color and return the path to the file.
    */
-  async generateSvg(color: string) {
-    const convertedText = this.text.replace(/"#ff0000"/gi, `"${color}"`);
-    const outputName = join(tmpDir, Asset.getTmpName(this.name, color));
+  async generateSvg(color: Colors) {
+    let convertedText = this.text;
 
+    let hex = hexFromColor(color);
+    if (hex != null) {
+      convertedText = convertedText.replace(/"#ff0000"/gi, `"${hex}"`);
+    }
+
+    let colorName = nameFromColor(color);
+
+    const outputName = join(tmpDir, Asset.getTmpName(this.name, colorName));
     const optimized = svgo.optimize(convertedText, {
       plugins: [
         {
@@ -78,15 +100,18 @@ class Asset {
    */
   async generate(
     name: string,
-    foreground: string,
-    background: string,
+    foreground: Colors,
+    background: Colors,
     widths: number[],
     options?: {
       padding?: number;
     }
   ) {
+    let foregroundName = nameFromColor(foreground);
+    let backgroundName = nameFromColor(background);
+
     console.info(
-      `Generating PNG: ${this.filename} -> ${foreground} on ${background}`
+      `Generating PNG: ${this.filename} -> ${foregroundName} on ${backgroundName}`
     );
 
     const svgName = await this.generateSvg(foreground);
@@ -101,66 +126,100 @@ class Asset {
     const svgUri = `data:image/svg+xml;base64,${svgText}`;
     const svgOutputName = join(
       outputDir,
-      Asset.getOutputName(name, undefined, ".svg")
+      Asset.getOutputName(name, foreground, background, true, undefined, ".svg")
     );
+    await mkdir(dirname(svgOutputName), { recursive: true });
     await copyFile(svgName, svgOutputName);
 
-    for (const width of widths) {
-      const padding = width * (options?.padding ?? 0);
-      const widthInsidePadding = Math.round(width - padding * 2);
-      const heightInsidePadding = Math.round(widthInsidePadding * aspectRatio);
-      const height = Math.round(heightInsidePadding + padding * 2);
+    const manifest: ManifestType = {
+      name,
+      svg: basename(svgOutputName),
+      foreground: foreground,
+      background: background,
+      aspectRatio,
+      widths: [],
+    };
 
-      const rendered = await satori(
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <img
-            src={svgUri}
+    for (const transparent of [false, true]) {
+      for (const width of widths) {
+        const padding = width * (options?.padding ?? 0);
+        const widthInsidePadding = Math.round(width - padding * 2);
+        const heightInsidePadding = Math.round(
+          widthInsidePadding * aspectRatio
+        );
+        const height = Math.round(heightInsidePadding + padding * 2);
+
+        const rendered = await satori(
+          <div
             style={{
-              width: widthInsidePadding,
-              height: heightInsidePadding,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              height: "100%",
             }}
-          />
-        </div>,
-        {
+          >
+            <img
+              src={svgUri}
+              style={{
+                width: widthInsidePadding,
+                height: heightInsidePadding,
+              }}
+            />
+          </div>,
+          {
+            width,
+            height,
+            fonts: [],
+          }
+        );
+
+        const outputName = join(
+          outputDir,
+          Asset.getOutputName(name, foreground, background, transparent, width)
+        );
+
+        let chain = sharp(Buffer.from(rendered));
+        if (transparent === false) {
+          let backgroundHex = hexFromColor(background);
+          if (backgroundHex != null) {
+            chain = chain.flatten({ background: backgroundHex });
+          }
+        }
+        chain = chain.resize({ width });
+        chain = chain.sharpen();
+        chain = chain.png({
+          compressionLevel: 9,
+          effort: 10,
+        });
+
+        await mkdir(dirname(outputName), { recursive: true });
+        const output = await chain.toFile(outputName);
+        console.info(`Generated PNG: ${outputName} (${output.size} bytes)`);
+
+        manifest.widths.push({
+          name: basename(outputName),
           width,
           height,
-          fonts: [],
-        }
-      );
-
-      const outputName = join(outputDir, Asset.getOutputName(name, width));
-
-      let chain = sharp(Buffer.from(rendered));
-      if (background !== Colors.Transparent) {
-        chain = chain.flatten({ background });
+          transparent,
+        });
       }
-      chain = chain.resize({ width });
-      chain = chain.sharpen();
-      chain = chain.png({
-        compressionLevel: 9,
-        effort: 10,
-      });
-
-      const output = await chain.toFile(outputName);
-      console.info(`Generated PNG: ${outputName} (${output.size} bytes)`);
     }
-  }
-}
 
-enum Colors {
-  Color = "#37109F",
-  White = "#FFFFFF",
-  Black = "#000000",
-  Gray = "#383838",
-  Transparent = "transparent",
+    const manifestName = join(
+      outputDir,
+      Asset.getOutputName(
+        name,
+        foreground,
+        background,
+        false,
+        undefined,
+        ".json"
+      )
+    );
+    await mkdir(dirname(manifestName), { recursive: true });
+    await writeFile(manifestName, JSON.stringify(manifest, null, 2));
+  }
 }
 
 async function main() {
@@ -180,39 +239,39 @@ async function main() {
   const squareName = "aesir_avatar";
 
   await square.generate(
-    `${squareName}__color_on_white`,
-    Colors.Color,
+    squareName,
+    Colors.ÆSIR,
     Colors.White,
     [32, 64, 128, 256, 512],
     { padding: 0.15 }
   );
 
   await square.generate(
-    `${squareName}__white_on_color`,
+    squareName,
     Colors.White,
-    Colors.Color,
+    Colors.ÆSIR,
     [32, 64, 128, 256, 512],
     { padding: 0.15 }
   );
 
   await logo.generate(
-    `${logoName}__color_on_white`,
-    Colors.Color,
+    logoName,
+    Colors.ÆSIR,
     Colors.White,
     [125, 250, 500, 1000, 2000],
     { padding: 0.1 }
   );
 
   await logo.generate(
-    `${logoName}__white_on_color`,
+    logoName,
     Colors.White,
-    Colors.Color,
+    Colors.ÆSIR,
     [125, 250, 500, 1000, 2000],
     { padding: 0.1 }
   );
 
   await logo.generate(
-    `${logoName}__gray_on_white`,
+    logoName,
     Colors.Gray,
     Colors.White,
     [125, 250, 500, 1000, 2000],
@@ -220,41 +279,9 @@ async function main() {
   );
 
   await logo.generate(
-    `${logoName}__black_on_white`,
+    logoName,
     Colors.Black,
     Colors.White,
-    [125, 250, 500, 1000, 2000],
-    { padding: 0.1 }
-  );
-
-  await logo.generate(
-    `${logoName}__color_on_transparent`,
-    Colors.Color,
-    Colors.Transparent,
-    [125, 250, 500, 1000, 2000],
-    { padding: 0.1 }
-  );
-
-  await logo.generate(
-    `${logoName}__white_on_transparent`,
-    Colors.White,
-    Colors.Transparent,
-    [125, 250, 500, 1000, 2000],
-    { padding: 0.1 }
-  );
-
-  await logo.generate(
-    `${logoName}__gray_on_transparent`,
-    Colors.Gray,
-    Colors.Transparent,
-    [125, 250, 500, 1000, 2000],
-    { padding: 0.1 }
-  );
-
-  await logo.generate(
-    `${logoName}__black_on_transparent`,
-    Colors.Black,
-    Colors.Transparent,
     [125, 250, 500, 1000, 2000],
     { padding: 0.1 }
   );

@@ -1,8 +1,50 @@
+import { Colors } from "@/generate/types";
+import { Variant } from "./components/Variants";
+
 export default function Home() {
   return (
     <div>
       <section>
         <header>Logo</header>
+        <div className="flex flex-wrap">
+          <Variant
+            name="aesir_logo"
+            foreground={Colors.ÆSIR}
+            background={Colors.White}
+          />
+          <Variant
+            name="aesir_logo"
+            foreground={Colors.White}
+            background={Colors.ÆSIR}
+          />
+        </div>
+        <div className="flex flex-wrap">
+          <Variant
+            name="aesir_logo"
+            foreground={Colors.Gray}
+            background={Colors.White}
+          />
+          <Variant
+            name="aesir_logo"
+            foreground={Colors.Black}
+            background={Colors.White}
+          />
+        </div>
+      </section>
+      <section>
+        <header>Logo</header>
+        <div className="flex flex-wrap">
+          <Variant
+            name="aesir_avatar"
+            foreground={Colors.ÆSIR}
+            background={Colors.White}
+          />
+          <Variant
+            name="aesir_avatar"
+            foreground={Colors.White}
+            background={Colors.ÆSIR}
+          />
+        </div>
       </section>
       <section>
         <h1>Colors</h1>

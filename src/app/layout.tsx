@@ -33,7 +33,7 @@ export default function RootLayout({
     <html lang="en" className={`${source_sans.className} h-full`}>
       <body className="bg-aesir-dark flex flex-col h-full gap-4">
         <nav className="bg-aesir p-4 flex flex-row items-center flex-wrap gap-4">
-          <div className="flex flex-row flex-wrap gap-x-4 gap-y-2 items-center">
+          <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 items-center">
             <Logo />
             <header className="font-bold text-xl">
               Assets and graphical design

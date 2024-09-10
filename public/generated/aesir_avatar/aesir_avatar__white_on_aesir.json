@@ -1,0 +1,69 @@
+{
+  "name": "aesir_avatar",
+  "svg": "aesir_avatar__white.svg",
+  "foreground": 1,
+  "background": 0,
+  "aspectRatio": 1,
+  "widths": [
+    {
+      "name": "aesir_avatar__white_on_aesir_32w.png",
+      "width": 32,
+      "height": 32,
+      "transparent": false
+    },
+    {
+      "name": "aesir_avatar__white_on_aesir_64w.png",
+      "width": 64,
+      "height": 64,
+      "transparent": false
+    },
+    {
+      "name": "aesir_avatar__white_on_aesir_128w.png",
+      "width": 128,
+      "height": 128,
+      "transparent": false
+    },
+    {
+      "name": "aesir_avatar__white_on_aesir_256w.png",
+      "width": 256,
+      "height": 256,
+      "transparent": false
+    },
+    {
+      "name": "aesir_avatar__white_on_aesir_512w.png",
+      "width": 512,
+      "height": 512,
+      "transparent": false
+    },
+    {
+      "name": "aesir_avatar__white_32w.png",
+      "width": 32,
+      "height": 32,
+      "transparent": true
+    },
+    {
+      "name": "aesir_avatar__white_64w.png",
+      "width": 64,
+      "height": 64,
+      "transparent": true
+    },
+    {
+      "name": "aesir_avatar__white_128w.png",
+      "width": 128,
+      "height": 128,
+      "transparent": true
+    },
+    {
+      "name": "aesir_avatar__white_256w.png",
+      "width": 256,
+      "height": 256,
+      "transparent": true
+    },
+    {
+      "name": "aesir_avatar__white_512w.png",
+      "width": 512,
+      "height": 512,
+      "transparent": true
+    }
+  ]
+}
