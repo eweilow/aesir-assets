@@ -13,7 +13,7 @@ const source_sans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "ÆSIR Assets",
+  title: "ÆSIR Assets and graphical design",
   description:
     "Assets and graphical design for ÆSIR - Association of Engineering Students in Rocketry",
 };
