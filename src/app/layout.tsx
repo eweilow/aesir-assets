@@ -32,20 +32,22 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${source_sans.className} h-full`}>
       <body className="bg-aesir flex flex-col h-full">
-        <nav className="bg-aesir p-4 flex flex-row items-center flex-wrap gap-4">
-          <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 items-center">
-            <Logo />
-            <header className="font-bold text-xl">
-              Assets and graphical design
-            </header>
-          </div>
+        <nav className="bg-aesir p-4">
+          <div className="max-w-screen-lg mx-auto flex flex-row items-center flex-wrap gap-4">
+            <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 items-center">
+              <Logo />
+              <header className="font-bold text-xl">
+                Assets and graphical design
+              </header>
+            </div>
 
-          <aside className="flex-1 flex justify-end">
-            <Link href="https://aesir.se" className="whitespace-nowrap">
-              <Icon path={mdiLink} className="w-4 h-4 inline mr-0.5" />
-              aesir.se
-            </Link>
-          </aside>
+            <aside className="flex-1 flex justify-end">
+              <Link href="https://aesir.se" className="whitespace-nowrap">
+                <Icon path={mdiLink} className="w-4 h-4 inline mr-0.5" />
+                aesir.se
+              </Link>
+            </aside>
+          </div>
         </nav>
 
         <section className="bg-aesir-dark py-4 flex-1 p-4">{children}</section>

@@ -103,45 +103,55 @@ export async function Variant({
 
   return (
     <div
-      className="flex flex-col"
+      className="flex-1 flex flex-col"
       style={{
         backgroundColor: hexFromColor(data.manifest.background),
         color: hexFromColor(data.manifest.foreground),
       }}
     >
-      <div className="p-8 flex items-center justify-center">
+      <div className="p-8 flex items-center justify-start">
         <Image alt={name} width={width} height={height} src={data.svgSrc} />
       </div>
 
-      <header>With background</header>
-      <ul className="flex flex-row gap-2">
-        {data.manifest.widths
-          .filter((s) => s.transparent === false)
-          .map((s) => {
-            return (
-              <li key={s.name}>
-                <VariantLink variant={variant} width={s.width} />
-              </li>
-            );
-          })}
-      </ul>
+      <div className="flex flex-col gap-4 px-8 pb-8">
+        <section>
+          <header className="font-semibold">With background</header>
+          <ul className="flex flex-row gap-2">
+            {data.manifest.widths
+              .filter((s) => s.transparent === false)
+              .map((s) => {
+                return (
+                  <li key={s.name}>
+                    <VariantLink variant={variant} width={s.width} />
+                  </li>
+                );
+              })}
+          </ul>
+        </section>
 
-      <header>Transparent</header>
-      <ul className="flex flex-row gap-2">
-        {data.manifest.widths
-          .filter((s) => s.transparent === true)
-          .map((s) => {
-            return (
-              <li key={s.name}>
-                <VariantLink variant={variant} transparent width={s.width} />
-              </li>
-            );
-          })}
+        <section>
+          <header className="font-semibold">Transparent</header>
+          <ul className="flex flex-row gap-2">
+            {data.manifest.widths
+              .filter((s) => s.transparent === true)
+              .map((s) => {
+                return (
+                  <li key={s.name}>
+                    <VariantLink
+                      variant={variant}
+                      transparent
+                      width={s.width}
+                    />
+                  </li>
+                );
+              })}
 
-        <li>
-          <VariantLink variant={variant} />
-        </li>
-      </ul>
+            <li>
+              <VariantLink variant={variant} />
+            </li>
+          </ul>
+        </section>
+      </div>
     </div>
   );
 }
