@@ -1,6 +1,7 @@
 import { Colors, hexFromColor } from "@/generate/types";
 import { Variant } from "./components/Variants";
 import { PropsWithChildren } from "react";
+import { LogoSpace } from "./components/LogoSpace";
 
 function Title(props: PropsWithChildren) {
   return (
@@ -80,6 +81,14 @@ export default function Home() {
             background={Colors.White}
           />
         </div>
+        <Paragraph>
+          Around the logo should always be some space. The PNGs already include
+          this, but the SVG does not. Roughly the same amount of space as the
+          text itself should be used at a minimum.
+        </Paragraph>
+        <section>
+          <LogoSpace />
+        </section>
       </section>
       <section className="flex flex-col gap-4">
         <Title>Avatar logo</Title>
