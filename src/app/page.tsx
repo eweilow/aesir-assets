@@ -3,7 +3,6 @@ import { Variant } from "./components/Variants";
 import { PropsWithChildren } from "react";
 import { LogoSpace } from "./components/LogoSpace";
 import Image from "next/image";
-import { Logo } from "./components/Logo";
 
 function Title(props: PropsWithChildren) {
   return (
