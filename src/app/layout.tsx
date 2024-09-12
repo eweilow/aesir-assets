@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${source_sans.className} h-full`}>
-      <body className="bg-aesir flex flex-col h-full">
+      <body className="bg-aesir text-white flex flex-col h-full">
         <nav className="bg-aesir p-4">
           <div className="max-w-screen-lg mx-auto flex flex-row items-center flex-wrap gap-4">
             <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 items-center">
