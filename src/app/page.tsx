@@ -2,6 +2,8 @@ import { Colors, hexFromColor } from "@/generate/types";
 import { Variant } from "./components/Variants";
 import { PropsWithChildren } from "react";
 import { LogoSpace } from "./components/LogoSpace";
+import Image from "next/image";
+import { Logo } from "./components/Logo";
 
 function Title(props: PropsWithChildren) {
   return (
@@ -41,7 +43,7 @@ function Paragraph(props: PropsWithChildren) {
 
 export default function Home() {
   return (
-    <div className="max-w-screen-lg mx-auto flex flex-col gap-8">
+    <div className="max-w-screen-lg mx-auto flex flex-col gap-16 my-8">
       <section className="flex flex-col gap-4">
         <Title>Logo</Title>
         <Paragraph>
@@ -193,6 +195,90 @@ export default function Home() {
           <div className="opacity-50">16px</div>
         </div>
       </section>
+
+      <section className="flex flex-col gap-4">
+        <Title>Examples</Title>
+        <Paragraph>
+          Below are some examples of the logo placed on top of some images. In
+          many cases the white logo has sufficient contrast to be used on blue
+          sky, or darker images.
+        </Paragraph>
+
+        <section className="relative">
+          <Image
+            alt="Sigmundr Hot Test"
+            src={require("@/images/sigmundr_ht.jpg")}
+            className="aspect-[4/2] object-cover object-bottom"
+          />
+          <div className="absolute inset-0 p-[5%] flex items-end justify-end">
+            <LogoSvg
+              style={{
+                width: "auto",
+                height: "20%",
+                marginBottom: "-1%",
+                marginTop: "-1%",
+              }}
+            />
+          </div>
+        </section>
+        <section className="relative">
+          <Image
+            alt="Sigmundr Launch"
+            src={require("@/images/sigmundr_launch.jpg")}
+            className="aspect-[4/2] object-cover object-bottom"
+          />
+          <div className="absolute inset-0 p-[5%] flex items-start justify-start">
+            <LogoSvg
+              style={{
+                width: "auto",
+                height: "20%",
+                marginBottom: "-1%",
+                marginTop: "-1%",
+              }}
+            />
+          </div>
+        </section>
+        <section className="relative">
+          <Image
+            alt="Mjollnir Hot Test"
+            src={require("@/images/mjollnir_ht.jpg")}
+            className="aspect-[4/2] object-cover"
+          />
+          <div className="absolute inset-0 p-[5%] flex items-start justify-start">
+            <LogoSvg
+              style={{
+                width: "auto",
+                height: "20%",
+                marginBottom: "-1%",
+                marginTop: "-1%",
+              }}
+            />
+          </div>
+        </section>
+        <Paragraph>
+          If the contrast is not sufficient, a gradient tint could be used. This
+          also introduces the color into the image, which can be a nice touch.
+        </Paragraph>
+        <section className="relative">
+          <Image
+            alt="Eitr Hot Test"
+            src={require("@/images/eitr_ht.jpg")}
+            className="aspect-[4/2] object-cover"
+          />
+          <div className="absolute inset-0 p-[5%] flex items-end justify-end bg-gradient-to-tl from-aesir/75 via-aesir/0 to-aesir/0">
+            <LogoSvg
+              style={{
+                width: "auto",
+                height: "20%",
+                marginBottom: "-1%",
+                marginTop: "-1%",
+              }}
+            />
+          </div>
+        </section>
+      </section>
     </div>
   );
 }
+
+import LogoSvg from "@/../public/generated/aesir_logo/aesir_logo__white.svg";
