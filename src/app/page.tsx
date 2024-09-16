@@ -105,13 +105,13 @@ export default function Home() {
         <div className="flex flex-wrap gap-4">
           <Variant
             name="aesir_avatar"
-            foreground={Colors.ÆSIR}
-            background={Colors.White}
+            foreground={Colors.White}
+            background={Colors.ÆSIR}
           />
           <Variant
             name="aesir_avatar"
-            foreground={Colors.White}
-            background={Colors.ÆSIR}
+            foreground={Colors.ÆSIR}
+            background={Colors.White}
           />
         </div>
       </section>
