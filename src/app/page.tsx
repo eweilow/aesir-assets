@@ -281,7 +281,7 @@ export default function Home() {
             To accent or not to accent, that is the question.
           </Paragraph>
 
-          {["#FF6900", "#FECB00", "#FFB266", "#FFC829", "#FFD481"].map(
+          {["#FF6900", "#FFB266", "#FECB00", "#FFC829", "#FFD481"].map(
             (acc) => (
               <div key={acc} className="flex h-24 items-stretch">
                 <div
