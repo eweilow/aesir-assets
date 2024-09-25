@@ -275,6 +275,65 @@ export default function Home() {
             />
           </div>
         </section>
+        <section className="flex flex-col gap-4">
+          <Title>Accent?</Title>
+          <Paragraph>
+            To accent or not to accent, that is the question.
+          </Paragraph>
+
+          {["#FF6900", "#FECB00", "#FFB266", "#FFC829", "#FFD481"].map(
+            (acc) => (
+              <div key={acc} className="flex h-24 items-stretch">
+                <div
+                  className="flex-[3] p-2 flex items-end justify-end text-sm font-semibold"
+                  style={{
+                    color: hexFromColor(Colors.White),
+                    backgroundColor: hexFromColor(Colors.ÆSIR),
+                  }}
+                >
+                  {hexFromColor(Colors.ÆSIR)}
+                </div>
+                <div
+                  className="p-2 flex items-end justify-end text-sm font-semibold"
+                  style={{
+                    color: "#000000",
+                    backgroundColor: acc,
+                    writingMode: "vertical-rl",
+                  }}
+                >
+                  {acc}
+                </div>
+                <div
+                  className="flex-[2] p-2 flex items-end justify-end text-sm font-semibold"
+                  style={{
+                    color: hexFromColor(Colors.Black),
+                    backgroundColor: hexFromColor(Colors.White),
+                  }}
+                >
+                  {hexFromColor(Colors.White)}
+                </div>
+                <div
+                  className="flex-1 p-2 flex items-end justify-end text-sm font-semibold"
+                  style={{
+                    color: hexFromColor(Colors.White),
+                    backgroundColor: hexFromColor(Colors.Gray),
+                  }}
+                >
+                  {hexFromColor(Colors.Gray)}
+                </div>
+                <div
+                  className="flex-1 p-2 flex items-end justify-end text-sm font-semibold"
+                  style={{
+                    color: hexFromColor(Colors.White),
+                    backgroundColor: hexFromColor(Colors.Black),
+                  }}
+                >
+                  {hexFromColor(Colors.Black)}
+                </div>
+              </div>
+            )
+          )}
+        </section>
       </section>
     </div>
   );
