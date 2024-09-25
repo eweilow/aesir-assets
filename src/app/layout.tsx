@@ -7,6 +7,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import Icon from "@mdi/react";
 import { mdiGithub, mdiLink } from "@mdi/js";
+import { Analytics } from "@vercel/analytics/react";
 
 const source_sans = Source_Sans_3({
   subsets: ["latin"],
@@ -65,6 +66,8 @@ export default function RootLayout({
             Last deployed {format(now, "yyyy-MM-dd")}
           </p>
         </footer>
+
+        <Analytics />
       </body>
     </html>
   );
