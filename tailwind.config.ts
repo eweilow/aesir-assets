@@ -9,6 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // https://tints.dev/yellow/FFC829
         yellow: {
           50: "#FFFAEB",
           100: "#FFF5D6",
@@ -23,6 +24,7 @@ const config: Config = {
           950: "#1F1700",
           DEFAULT: "#FFC829",
         },
+        // https://tints.dev/aesir/37109F
         aesir: {
           50: "#E6DFFC",
           100: "#D1C3F9",
