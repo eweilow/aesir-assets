@@ -66,6 +66,7 @@ function VariantLink({
   if (width == null) {
     return (
       <Link
+        prefetch={false}
         className="underline text-sm"
         download
         href={getPublicPath(variant, true, undefined, ".svg")}
@@ -77,6 +78,7 @@ function VariantLink({
 
   return (
     <Link
+      prefetch={false}
       className="underline text-sm"
       download
       href={getPublicPath(variant, transparent, width, ".png")}
